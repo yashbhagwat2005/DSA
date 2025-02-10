@@ -12,49 +12,49 @@ void add_beg(int data, struct node** head) {
         printf("Memory allocation failed\n");
         return;
     }
-
     if (*head == NULL) {
         temp->data = data;
         temp->link = temp;
         *head = temp;
         return;
     }
-
     struct node* tail = *head;
     while (tail->link != *head) {
         tail = tail->link;
     }
-
     temp->data = data;
     temp->link = *head;
     tail->link = temp;
     *head = temp;
 }
 
-void del_beg(struct node**head){
-    struct node*tail = *head;
-    while(tail->link!=(*head)){
+void del_beg(struct node** head) {
+    if (*head == NULL) return; 
+    struct node* tail = *head;
+    while (tail->link != *head) {
         tail = tail->link;
+    }
+    if (*head == tail) {
+        free(*head);
+        *head = NULL;
+        return;
     }
     tail->link = (*head)->link;
     free(*head);
     *head = tail->link;
 }
 
-void del_end(struct node**head){
-    if (*head == NULL) {
-        printf("List is empty, cannot delete.\n");
-        return;
-    }
+void del_end(struct node** head) {
+    if (*head == NULL) return;
 
-    if ((*head)->link == *head) { 
+    if ((*head)->link == *head) {
         free(*head);
         *head = NULL;
         return;
     }
-    struct node*current = *head;
-    struct node*previous = NULL;
-    while(current->link!=*head){
+    struct node* current = *head;
+    struct node* previous = NULL;
+    while (current->link != *head) {
         previous = current;
         current = current->link;
     }
@@ -63,31 +63,32 @@ void del_end(struct node**head){
 }
 
 
-void add_end(int data, struct node* head) {
+void add_end(int data, struct node** head) {
     struct node* temp = (struct node*)malloc(sizeof(struct node));
     if (temp == NULL) {
         printf("Memory not available\n");
         return;
     }
+    temp->data = data;
+    temp->link = temp; 
 
-    if (head == NULL) {
-        temp->data = data;
-        temp->link = temp;
+    if (*head == NULL) {
+        *head = temp;
         return;
     }
-
-    struct node* tail = head;
-    while (tail->link != head) {
+    struct node* tail = *head;
+    while (tail->link != *head) {
         tail = tail->link;
     }
-    temp->data = data;
     tail->link = temp;
-    temp->link = head;
+    temp->link = *head;
 }
 
 void print(struct node* head) {
-    if (head == NULL) return;
-
+    if (head == NULL) {
+        printf("List is empty\n");
+        return;
+    }
     struct node* temp = head;
     do {
         printf("%d ", temp->data);
@@ -161,7 +162,7 @@ void add_pos(struct node** head, int pos, int data) {
         free(temp);
         return;
     } else if (pos == list_size + 1) {
-        add_end(data, *head);
+        add_end(data, head);
         free(temp);
         return;
     } else {
@@ -198,6 +199,7 @@ int main() {
             printf("Enter a number to add it in the specific position: ");
             scanf("%d",&pos);
             printf("Enter a number : ");
+            scanf("%d",&n);
             add_pos(&head,pos,n);
         }
         else if(ch==2){
@@ -208,14 +210,12 @@ int main() {
         else if(ch==3){
             printf("Enter a number to add it in the end of the list : ");
             scanf("%d",&n);
-            add_end(n,head);
+            add_end(n,&head);
         }
         else if (ch==4){
-            printf("Enter a number to add it in the specific position: ");
+            printf("Enter a number to delete it in the specific position: ");
             scanf("%d",&pos);
-            printf("Enter a number : ");
-            scanf("%d",&n);
-            del_pos(&head,pos,n);
+            del_pos(&head,pos,count(head));
         }
         else if (ch==5){
             printf("Deleting the first element of the list\n");
@@ -233,5 +233,6 @@ int main() {
         printf("Enter your next choice: ");
         scanf("%d",&ch);
     }
+    printf("\nEnd of program\n");
     return 0;
 }
