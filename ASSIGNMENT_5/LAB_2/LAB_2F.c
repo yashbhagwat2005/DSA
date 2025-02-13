@@ -39,13 +39,5 @@ int main(){
     pop();
     pop();
     pop();
-    pop();
-    if (is_empty()==1){
-        printf("Stack underflow \n");
-    }
-    else{
-        printf("It is not underflowed \n");
-    }
-    
-    
+    pop(); 
 }

@@ -35,7 +35,7 @@ int peek(struct node* top) {
 }
 
 int is_empty(struct node* top) {
-    return (top == NULL); // Returns 1 if empty, 0 if not
+    return (top == NULL);
 }
 
 int main() {
